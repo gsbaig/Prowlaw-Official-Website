@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prolaw Law Firm | Jordan & Saudi Arabia Legal Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root { 
+        --font-primary: 'Inter', sans-serif; 
+        --font-arabic: 'Cairo', sans-serif;
+        --font-serif: 'Cinzel', serif;
+        --prolaw-navy: #1F2A37;
+        --prolaw-gold: #C9A24D;
+      }
+      
+      body { 
+        font-family: var(--font-primary);
+        background-color: #FFFFFF;
+        color: var(--prolaw-navy);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+      }
+
+      /* Global Arabic Overrides */
+      html[lang="ar"] body,
+      html[lang="ar"] button,
+      html[lang="ar"] input,
+      html[lang="ar"] select,
+      html[lang="ar"] textarea {
+        font-family: var(--font-arabic) !important;
+      }
+      
+      h1, h2, h3, h4, h5, h6 { 
+        font-family: var(--font-serif); 
+        color: var(--prolaw-navy);
+      }
+
+      html[lang="ar"] h1, 
+      html[lang="ar"] h2, 
+      html[lang="ar"] h3, 
+      html[lang="ar"] h4 {
+        font-family: var(--font-arabic) !important;
+        font-weight: 700;
+      }
+
+      html[dir="rtl"] body {
+        letter-spacing: 0;
+      }
+
+      ::selection {
+        background-color: var(--prolaw-gold);
+        color: #FFFFFF;
+      }
+
+      /* Custom Scrollbar for Drawer */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(193, 155, 77, 0.2);
+        border-radius: 10px;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              prolaw: {
+                navy: '#1F2A37',
+                gold: '#C9A24D',
+                goldLight: '#D4B46D',
+                white: '#FFFFFF',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'Cairo', 'sans-serif'],
+              serif: ['Cinzel', 'serif'],
+              cairo: ['Cairo', 'sans-serif'],
+            },
+            spacing: {
+              '128': '32rem',
+              '144': '36rem',
+            }
+          }
+        }
+      }
+    </script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0"
+      }
+    }
+    </script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
