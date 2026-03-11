@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, ChevronDown, AlertCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, ChevronDown, AlertCircle, Globe } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { GET_SERVICES } from '../constants';
 
@@ -126,8 +126,9 @@ const Contact: React.FC = () => {
                   {[
                     { icon: <MapPin className="text-prolaw-gold" />, title: t('common.amman'), detail: t('common.ammanAddress') },
                     { icon: <MapPin className="text-prolaw-gold" />, title: t('common.riyadh'), detail: t('common.riyadhAddress') },
-                    { icon: <Phone className="text-prolaw-gold" />, title: isRtl ? 'دعم الهاتف' : 'Phone Support', detail: '+XXX XXX XXXX' },
-                    { icon: <Mail className="text-prolaw-gold" />, title: isRtl ? 'راسلنا' : 'Email Us', detail: 'info@prolawlawfirm.com' },
+                    { icon: <Phone className="text-prolaw-gold" />, title: isRtl ? 'دعم الهاتف' : 'Phone Support', detail: '+962 6 5678110 , + 962 6 565 4400' },
+                    { icon: <Mail className="text-prolaw-gold" />, title: isRtl ? 'راسلنا' : 'Email Us', detail: 'Info@prolaw-jordan.com' },
+                    { icon: <Globe className="text-prolaw-gold" />, title: isRtl ? 'الموقع الإلكتروني' : 'Website', detail: 'www.prolaw-jordan.com' },
                     { icon: <Clock className="text-prolaw-gold" />, title: isRtl ? 'ساعات العمل' : 'Business Hours', detail: isRtl ? 'الأحد – الخميس | 9:00 ص – 6:00 م' : 'Sun – Thu | 9:00 AM – 6:00 PM' }
                   ].map((item, idx) => (
                     <div key={idx} className={`flex gap-6 ${isRtl ? 'flex-row-reverse' : ''}`}>

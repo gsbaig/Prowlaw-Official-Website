@@ -99,59 +99,45 @@ const About: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-24">
             <span className="text-prolaw-gold font-bold text-[11px] uppercase tracking-[0.4em] mb-4 block">Leadership & Counsel</span>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-prolaw-navy tracking-tight">Founder</h2>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-prolaw-navy tracking-tight">Our Founder</h2>
             <div className="h-1.5 w-24 bg-prolaw-gold mx-auto mt-6" />
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
-            <div className="w-full lg:w-5/12 relative group">
-               <div className="absolute top-6 -left-6 w-full h-full border-2 border-prolaw-gold/30 rounded-sm -z-10 group-hover:border-prolaw-gold transition-colors duration-500" />
-               <div className="w-full aspect-[4/5] bg-slate-100 rounded-sm shadow-2xl flex items-center justify-center border border-slate-200">
-                  <User size={120} className="text-slate-300" />
-               </div>
-            </div>
-            
-            <div className="w-full lg:w-7/12 space-y-8 pt-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="space-y-8 pt-4">
               <div>
-                <h3 className="text-3xl md:text-4xl font-serif font-bold text-prolaw-navy mb-2">Attorney Fares Attalla Al-Shahwan</h3>
-                <p className="text-prolaw-gold font-bold text-xs uppercase tracking-[0.2em] mb-8">Founding Partner & Legal Advisor</p>
+                <h3 className="text-3xl md:text-4xl font-serif font-bold text-prolaw-navy mb-2">Attorney Fares Al-Shahwan</h3>
                 <div className="w-12 h-1 bg-slate-100 mb-8" />
               </div>
 
               <div className="prose prose-lg text-slate-600 font-light leading-relaxed">
                 <p className="mb-6 relative">
                   <span className="text-6xl text-prolaw-gold/20 font-serif absolute -top-6 -left-4 -z-10">“</span>
-                  Since establishing Prolaw in 1992, our practice has been guided by a single, unwavering principle: that true legal excellence lies in the balance between deep-rooted knowledge and forward-thinking strategy. For over three decades, we have evolved alongside the region's dynamic legal landscape, ensuring our clients not only navigate regulations but thrive within them.
+                  We firmly believe that the success of our clients is our own success. We are committed to the principle that every step must lead to the ultimate goal: delivering the best and most distinguished results for those who place their trust in us.
                 </p>
                 <p className="mb-6">
-                   Our commitment goes beyond traditional representation. Whether advising multinational corporations or litigating before the highest courts, we act as steadfast guardians of our clients' interests. We combine rigorous academic insight with practical enforcement to deliver counsel that empowers business growth and ensures justice.
+                   Our founder is a distinguished figure in the Jordanian legal community, with over thirty years of professional experience in litigation, dispute resolution, and arbitration. His vision has always been to achieve excellence in legal practice. Through his dedicated work, Prolaw has grown into a leading legal institution, recognized for its deep expertise and unwavering commitment to ensuring success for its clients.
                 </p>
               </div>
-
-              <div className="bg-slate-50 p-8 rounded-lg border border-slate-100 mt-8">
-                <h4 className="text-prolaw-navy font-bold text-sm uppercase tracking-widest mb-6 border-b border-slate-200 pb-2">Credentials & Expertise</h4>
-                <ul className="grid grid-cols-1 gap-3">
-                  {[
-                    "LL.B. in Law (1992) – University of Jordan",
-                    "Member of the Jordanian Bar Association",
-                    "Member of the Jordanian Arbitrators Association",
-                    "Member of the Examination Committee, Jordanian Bar Association",
-                    "Participant in reviewing research of Jordanian trainee lawyers",
-                    "Litigator before all Jordanian courts (Regular, Administrative, Constitutional, Tax, and Customs)",
-                    "Legal advisor to numerous local and international companies"
-                  ].map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-sm text-slate-600">
-                      <CheckCircle2 size={16} className="text-prolaw-gold shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="pt-8 opacity-70">
-                 <span className="font-serif text-3xl md:text-4xl text-prolaw-navy italic transform -rotate-2 inline-block">Fares Al-Shahwan</span>
-              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+             <h2 className="text-3xl md:text-4xl font-serif font-bold text-prolaw-navy tracking-tight">Our Team</h2>
+             <div className="h-1.5 w-24 bg-prolaw-gold mx-auto mt-6" />
+          </div>
+          <div className="max-w-4xl mx-auto text-center space-y-8 text-slate-600 leading-relaxed text-lg font-light">
+            <p>
+              At Prolaw, we operate as a unified team dedicated to protecting our clients’ interests and achieving the best possible outcomes. Our lawyers and legal consultants combine practical experience with the highest standards of professionalism to deliver precise and distinguished legal solutions.
+            </p>
+            <p>
+              For every matter, we collaborate across practice areas, examining issues from multiple perspectives and integrating diverse specializations within the firm to develop fully comprehensive legal strategies—whether in litigation, arbitration, or corporate and commercial matters. This team-based approach ensures that our clients benefit from precise legal knowledge, collective expertise, and the highest standard of comprehensive legal services.
+            </p>
           </div>
         </div>
       </section>

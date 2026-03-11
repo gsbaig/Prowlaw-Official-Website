@@ -34,12 +34,12 @@ export const TRANSLATIONS = {
   en: {
     nav: {
       home: 'Home',
-      about: 'AboutUS',
+      about: 'About Us',
       services: 'Services',
       sectors: 'Industries',
       team: 'People',
       blog: 'News',
-      contact: 'Contact',
+      contact: 'Contact Us',
       careers: 'Join Our Team',
       consult: 'Consult Now',
       request: 'Request Consultation'
@@ -69,8 +69,8 @@ export const TRANSLATIONS = {
       offices: 'Offices',
       amman: 'Amman, Jordan',
       riyadh: 'Riyadh, Saudi Arabia',
-      ammanAddress: 'Business District, Level 5',
-      riyadhAddress: 'King Fahad Road, Tower B',
+      ammanAddress: 'p.o.Box 928245. Amman 1190 Jordan',
+      riyadhAddress: 'Olaya Towers, King Fahad Road',
       disclaimerTitle: 'Disclaimer',
       disclaimerText: 'The information provided on this website is for general informational purposes only and does not constitute legal advice.',
       allRights: 'All Rights Reserved.',

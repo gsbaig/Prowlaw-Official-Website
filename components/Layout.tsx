@@ -7,7 +7,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const Logo: React.FC<{ light?: boolean; isScrolled?: boolean }> = ({ light = false, isScrolled = false }) => {
   return (
-    <div className={`flex items-center justify-center transition-all duration-500 hover:opacity-90`}>
+    <div className={`flex flex-col items-center justify-center transition-all duration-500 hover:opacity-90`}>
       <img 
         src="https://i.ibb.co/qYpmHN2d/prolaw-logo.png" 
         alt="Prolaw Law Firm Logo" 
@@ -16,6 +16,7 @@ const Logo: React.FC<{ light?: boolean; isScrolled?: boolean }> = ({ light = fal
           e.currentTarget.src = "https://i.ibb.co/C2S4m3Y/prolaw-logo.png";
         }}
       />
+      <span className={`text-[9px] font-bold tracking-[0.2em] uppercase mt-[-5rem] ${light ? 'text-white/80' : 'text-prolaw-navy/80'}`}>Since 1992</span>
     </div>
   );
 };
@@ -62,8 +63,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div className={`fixed top-0 left-0 right-0 z-[130] transition-all duration-500 overflow-hidden ${isScrolled ? 'h-0 opacity-0' : 'h-10 opacity-100'} bg-prolaw-navy border-b border-white/5`}>
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em]">
           <div className="flex items-center gap-6 text-white/60">
-             <span className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><Phone size={12} className="text-prolaw-gold"/> +XXX XXX XXXX</span>
-             <span className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><Mail size={12} className="text-prolaw-gold"/> info@prolawlawfirm.com</span>
+             <span className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><Phone size={12} className="text-prolaw-gold"/> +962 6 5678110</span>
+             <span className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><Mail size={12} className="text-prolaw-gold"/> Info@prolaw-jordan.com</span>
           </div>
         </div>
       </div>
