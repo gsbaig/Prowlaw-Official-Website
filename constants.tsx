@@ -69,7 +69,7 @@ export const TRANSLATIONS = {
       offices: 'Offices',
       amman: 'Amman, Jordan',
       riyadh: 'Riyadh, Saudi Arabia',
-      ammanAddress: 'p.o.Box 928245. Amman 1190 Jordan',
+      ammanAddress: 'p.o.Box 928245. Amman 11190 Jordan',
       riyadhAddress: 'Olaya Towers, King Fahad Road',
       disclaimerTitle: 'Disclaimer',
       disclaimerText: 'The information provided on this website is for general informational purposes only and does not constitute legal advice.',
