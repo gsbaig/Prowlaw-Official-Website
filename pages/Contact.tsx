@@ -80,7 +80,7 @@ const Contact: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Final validation sweep
@@ -92,14 +92,33 @@ const Contact: React.FC = () => {
 
     if (isNameValid && isEmailValid && isExpertiseValid && isMessageValid && isPhoneValid) {
       setIsSubmitting(true);
-      // Simulate API Submission
-      setTimeout(() => {
+      
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setSubmitted(true);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => setSubmitted(false), 8000);
+          setFormData({ name: '', email: '', phone: '', expertise: '', message: '' });
+        } else {
+          // Handle error (e.g. backend validation or email service error)
+          alert(lang === 'ar' ? `حدث خطأ: ${data.error}` : `Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error("Submission error:", error);
+        alert(lang === 'ar' ? 'فشل في إرسال النموذج. يرجى المحاولة لاحقاً.' : 'Failed to submit form. Please try again later.');
+      } finally {
         setIsSubmitting(false);
-        setSubmitted(true);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => setSubmitted(false), 8000);
-        setFormData({ name: '', email: '', phone: '', expertise: '', message: '' });
-      }, 1500);
+      }
     }
   };
 

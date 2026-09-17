@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "Admin": {
+      "title": "Admin",
+      "description": "Administrator user profile",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "description": "Must be 'admin'" }
+      },
+      "required": ["role"]
+    },
+    "NewsArticle": {
+      "title": "News Article",
+      "description": "A news article to be displayed on the platform",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Title of the article" },
+        "category": { "type": "string", "description": "Category of the article (e.g. insights, regulations)" },
+        "summary": { "type": "string", "description": "Short summary of the article" },
+        "author": { "type": "string", "description": "Author of the article" },
+        "date": { "type": "string", "description": "Display date of the article" },
+        "status": { "type": "string", "description": "Must be 'published'" },
+        "imageUrl": { "type": "string", "description": "Base64 encoded string of header image" },
+        "additionalImages": { "type": "array", "items": { "type": "string" }, "description": "Array of base64 encoded strings of additional images" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "summary", "author", "date", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Stores admin role assignments"
+    },
+    "/news/{newsId}": {
+      "schema": { "$ref": "#/entities/NewsArticle" },
+      "description": "Stores news articles"
+    }
+  }
+}

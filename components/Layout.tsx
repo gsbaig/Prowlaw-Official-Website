@@ -173,6 +173,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <li><Link to="/services" className="text-slate-400 hover:text-white text-sm">Practice Areas</Link></li>
               <li><Link to="/sectors" className="text-slate-400 hover:text-white text-sm">{t('nav.sectors')}</Link></li>
               <li><Link to="/contact" className="text-slate-400 hover:text-white text-sm">{t('nav.contact')}</Link></li>
+              <li><Link to="/admin" className="text-slate-600 hover:text-white text-sm transition-colors">Admin Panel</Link></li>
             </ul>
           </div>
           <div>

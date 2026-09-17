@@ -100,11 +100,7 @@ export const TRANSLATIONS = {
     news: {
       header_title: 'News',
       header_subtitle: 'Expert legal analysis, regulatory updates, and firm developments.',
-      articles: [
-        { id: '1', title: 'New Saudi Civil Transactions Law', date: 'May 15, 2024', category: 'regulations', summary: 'An analysis of how the new Civil Transactions Law in KSA is reshaping contract law.', author: 'Prolaw Research Team' },
-        { id: '2', title: 'Jordan’s New Investment Environment Law', date: 'April 28, 2024', category: 'insights', summary: 'Exploring the incentives and streamlined processes introduced to attract FDI.', author: 'Amman Legal Desk' },
-        { id: '3', title: 'Fintech Regulations in Jordan', date: 'March 10, 2024', category: 'regulations', summary: 'A guide to the evolving regulatory landscape for financial technology startups.', author: 'Zaid Al-Najjar' }
-      ],
+      articles: [],
       categories: {
         regulations: 'Regulations',
         insights: 'Insights'

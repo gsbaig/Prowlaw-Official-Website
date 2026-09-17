@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { 
+      return isSignedIn() && 
+             request.auth.token.email_verified == true &&
+             exists(/databases/$(database)/documents/admins/$(request.auth.uid)); 
+    }
+
+    match /test/connection {
+      allow read: if true;
+    }
+
+    match /admins/{userId} {
+      allow get: if isAdmin() || (isSignedIn() && request.auth.uid == userId);
+      allow list: if isAdmin();
+      allow create: if (isAdmin() || (isSignedIn() && request.auth.token.email == 'gsbaig@gmail.com')) && 
+                    isValidId(userId) &&
+                    incoming().keys().hasAll(['role']) && 
+                    incoming().keys().size() == 1 &&
+                    incoming().role == 'admin';
+      allow update: if false;
+      allow delete: if isAdmin() && request.auth.uid != userId;
+    }
+
+    function isValidNews(data) {
+      let hasImage = 'imageUrl' in data;
+      let hasAdditional = 'additionalImages' in data;
+      let allowedSize = 7 + (hasImage ? 1 : 0) + (hasAdditional ? 1 : 0);
+      
+      return data.keys().hasAll(['title', 'category', 'summary', 'author', 'date', 'status', 'createdAt']) &&
+             data.keys().size() == allowedSize &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.category is string && data.category.size() > 0 && data.category.size() <= 50 &&
+             data.summary is string && data.summary.size() > 0 && data.summary.size() <= 2000 &&
+             data.author is string && data.author.size() > 0 && data.author.size() <= 100 &&
+             data.date is string && data.date.size() > 0 && data.date.size() <= 50 &&
+             (data.status == 'published' || data.status == 'draft') &&
+             (!hasImage || (data.imageUrl is string && data.imageUrl.size() <= 600000)) &&
+             (!hasAdditional || (data.additionalImages is list && data.additionalImages.size() <= 3 && (data.additionalImages.size() == 0 || data.additionalImages[0] is string)));
+    }
+
+    match /news/{newsId} {
+      allow get: if existing().status == 'published' || isAdmin();
+      allow list: if existing().status == 'published' || isAdmin();
+
+      allow create: if isAdmin() && 
+                    isValidId(newsId) &&
+                    isValidNews(incoming()) &&
+                    incoming().createdAt == request.time;
+                    
+      allow update: if isAdmin() &&
+                    isValidId(newsId) &&
+                    isValidNews(incoming()) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['title', 'category', 'summary', 'author', 'date', 'status', 'imageUrl', 'additionalImages']) &&
+                    incoming().createdAt == existing().createdAt;
+
+      allow delete: if isAdmin();
+    }
+  }
+}

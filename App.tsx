@@ -13,6 +13,7 @@ import Careers from './pages/Careers';
 import News from './pages/News';
 import Post from './pages/Post';
 import PrivacyDisclaimer from './pages/PrivacyDisclaimer';
+import Admin from './pages/Admin';
 import { LanguageProvider } from './contexts/LanguageContext';
 
 const ScrollToTop = () => {
@@ -41,6 +42,7 @@ const App: React.FC = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/privacy-disclaimer" element={<PrivacyDisclaimer />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </Layout>
       </Router>
