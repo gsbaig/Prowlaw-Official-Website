@@ -16,7 +16,7 @@ const Logo: React.FC<{ light?: boolean; isScrolled?: boolean }> = ({ light = fal
           e.currentTarget.src = "https://i.ibb.co/C2S4m3Y/prolaw-logo.png";
         }}
       />
-      <span className={`text-[9px] font-bold tracking-[0.2em] uppercase mt-[-5rem] ${light ? 'text-white/80' : 'text-prolaw-navy/80'}`}>Since 1992</span>
+      <span className={`text-[9px] font-bold tracking-[0.2em] uppercase mt-[-5rem] ${light ? 'text-white/80' : 'text-prolaw-navy/80'}`}>Since 1994</span>
     </div>
   );
 };
