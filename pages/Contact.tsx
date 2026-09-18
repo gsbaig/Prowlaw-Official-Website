@@ -97,9 +97,9 @@ const Contact: React.FC = () => {
         const response = await fetch('/contact.php', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: JSON.stringify(formData)
+          body: new URLSearchParams(formData as Record<string, string>).toString()
         });
 
         let data;

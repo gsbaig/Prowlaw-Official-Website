@@ -17,13 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// Read the JSON payload from the request body
+// Read payload from either JSON or standard POST
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true);
 
 if (!$input) {
+    // Fallback to standard POST data if JSON isn't used
+    $input = $_POST;
+}
+
+if (empty($input)) {
     http_response_code(400);
-    echo json_encode(["error" => "Invalid JSON payload"]);
+    echo json_encode(["error" => "Empty payload"]);
     exit();
 }
 
