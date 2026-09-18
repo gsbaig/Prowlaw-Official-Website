@@ -1,28 +1,33 @@
 <?php
+// Include PHPMailer classes (You will need to upload the PHPMailer folder to cPanel)
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// We will assume the PHPMailer folder is uploaded next to this script in the public_html directory
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); // For testing/CORS
+header('Access-Control-Allow-Origin: *'); 
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(["error" => "Method not allowed"]);
     exit();
 }
 
-// Read payload from either JSON or standard POST
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true);
 
 if (!$input) {
-    // Fallback to standard POST data if JSON isn't used
     $input = $_POST;
 }
 
@@ -32,7 +37,6 @@ if (empty($input)) {
     exit();
 }
 
-// Sanitize inputs
 $name = isset($input['name']) ? htmlspecialchars(trim($input['name'])) : '';
 $email = isset($input['email']) ? filter_var(trim($input['email']), FILTER_SANITIZE_EMAIL) : '';
 $phone = isset($input['phone']) ? htmlspecialchars(trim($input['phone'])) : '';
@@ -52,18 +56,18 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 // ==========================================
-// CONFIGURATION: Set your email addresses here
+// SMTP CONFIGURATION (Fill this out in cPanel!)
 // ==========================================
-$toAdminEmail = "info@prolaw-jordan.com"; 
-$fromEmail = "info@prolaw-jordan.com"; // Ensure this matches your cPanel domain!
+$smtpHost = 'mail.prolaw-jordan.com'; // Usually mail.yourdomain.com
+$smtpUser = 'info@prolaw-jordan.com'; // Your full email address
+$smtpPass = 'YOUR_EMAIL_PASSWORD_HERE'; // Replace with your actual email password
+$smtpPort = 465; // Usually 465 for SSL, or 587 for TLS
+$toAdminEmail = 'info@prolaw-jordan.com';
 
 // 1. Email to the Firm (Admin)
 $adminSubject = "New Contact Form Submission from $name";
-$adminMessage = "
+$adminBody = "
 <html>
-<head>
-  <title>New Contact Form Submission</title>
-</head>
 <body>
   <h3>New Contact Form Submission</h3>
   <p><strong>Name:</strong> $name</p>
@@ -76,27 +80,18 @@ $adminMessage = "
 </html>
 ";
 
-$adminHeaders = "MIME-Version: 1.0" . "\r\n";
-$adminHeaders .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-$adminHeaders .= "From: Contact Form <$fromEmail>" . "\r\n";
-$adminHeaders .= "Reply-To: $email" . "\r\n";
-
 // 2. Email to the User (Submitter)
-$userSubject = "We received your message";
-$userMessage = "
+$userSubject = "Thank you for contacting Prolaw Law Firm";
+$userBody = "
 <html>
-<head>
-  <title>We received your message</title>
-</head>
 <body>
   <h3>Dear $name,</h3>
-  <p>Thank you for reaching out to Prolaw Law Firm. We have successfully received your message.</p>
+  <p>Thank you for contacting us. Our team will contact you accordingly.</p>
   <p>This is a confirmation of the details you submitted:</p>
   <blockquote style='border-left: 4px solid #ccc; padding-left: 10px; color: #555;'>
     <p><strong>Expertise Area:</strong> $expertise</p>
     <p><strong>Message:</strong><br/>" . nl2br($message) . "</p>
   </blockquote>
-  <p>Our team will review your inquiry and get back to you shortly.</p>
   <br/>
   <p>Best regards,</p>
   <p><strong>Prolaw Law Firm</strong></p>
@@ -104,19 +99,43 @@ $userMessage = "
 </html>
 ";
 
-$userHeaders = "MIME-Version: 1.0" . "\r\n";
-$userHeaders .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-$userHeaders .= "From: Prolaw Law Firm <$fromEmail>" . "\r\n";
+$mail = new PHPMailer(true);
 
-// Send Emails using PHP mail()
-$adminSent = mail($toAdminEmail, $adminSubject, $adminMessage, $adminHeaders);
-$userSent = mail($email, $userSubject, $userMessage, $userHeaders);
-
-if ($adminSent) {
+try {
+    // Server settings
+    $mail->isSMTP();
+    $mail->Host       = $smtpHost;
+    $mail->SMTPAuth   = true;
+    $mail->Username   = $smtpUser;
+    $mail->Password   = $smtpPass;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Enable implicit SSL encryption
+    $mail->Port       = $smtpPort;
+    
+    // Set sender info
+    $mail->setFrom($smtpUser, 'Prolaw Law Firm');
+    
+    // --- SEND TO ADMIN ---
+    $mail->addAddress($toAdminEmail);
+    $mail->addReplyTo($email, $name);
+    $mail->isHTML(true);
+    $mail->Subject = $adminSubject;
+    $mail->Body    = $adminBody;
+    $mail->send();
+    
+    // --- SEND TO USER ---
+    $mail->clearAllRecipients(); // Clear admin address
+    $mail->clearReplyTos();      // Clear reply-to
+    
+    $mail->addAddress($email, $name);
+    $mail->Subject = $userSubject;
+    $mail->Body    = $userBody;
+    $mail->send();
+    
     http_response_code(200);
     echo json_encode(["success" => true, "message" => "Emails sent successfully"]);
-} else {
+    
+} catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(["error" => "Failed to send email. Please check your cPanel mail server configuration."]);
+    echo json_encode(["error" => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
 }
 ?>
