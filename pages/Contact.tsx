@@ -104,10 +104,18 @@ const Contact: React.FC = () => {
         });
 
         let data;
+        const text = await response.text(); // Read as text first to handle cPanel injection
+        
         try {
-          data = await response.json();
+          data = JSON.parse(text);
         } catch (err) {
-          throw new Error(`Server returned a non-JSON response. Status: ${response.status}`);
+          // If status is 200 but it's not JSON, assume success (cPanel often injects HTML into PHP responses)
+          if (response.ok) {
+            console.warn("Server returned success but response was not JSON:", text);
+            data = { success: true };
+          } else {
+            throw new Error(`Server returned a non-JSON response. Status: ${response.status}. Response: ${text.substring(0, 50)}...`);
+          }
         }
 
         if (response.ok) {
