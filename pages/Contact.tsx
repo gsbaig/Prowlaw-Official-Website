@@ -94,7 +94,7 @@ const Contact: React.FC = () => {
       setIsSubmitting(true);
       
       try {
-        const response = await fetch('/api/contact', {
+        const response = await fetch('/contact.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -102,7 +102,12 @@ const Contact: React.FC = () => {
           body: JSON.stringify(formData)
         });
 
-        const data = await response.json();
+        let data;
+        try {
+          data = await response.json();
+        } catch (err) {
+          throw new Error(`Server returned a non-JSON response. Status: ${response.status}`);
+        }
 
         if (response.ok) {
           setSubmitted(true);
@@ -113,9 +118,9 @@ const Contact: React.FC = () => {
           // Handle error (e.g. backend validation or email service error)
           alert(lang === 'ar' ? `حدث خطأ: ${data.error}` : `Error: ${data.error}`);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Submission error:", error);
-        alert(lang === 'ar' ? 'فشل في إرسال النموذج. يرجى المحاولة لاحقاً.' : 'Failed to submit form. Please try again later.');
+        alert(lang === 'ar' ? `فشل في إرسال النموذج. التفاصيل: ${error.message}` : `Failed to submit form. Details: ${error.message}`);
       } finally {
         setIsSubmitting(false);
       }
