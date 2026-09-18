@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, ChevronDown, AlertCircle, Globe } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { GET_SERVICES } from '../constants';
@@ -71,6 +71,27 @@ const Contact: React.FC = () => {
     return !error;
   };
 
+  useEffect(() => {
+    // Check for success or error query parameters on load
+    const searchParams = new URLSearchParams(window.location.search || window.location.hash.split('?')[1] || '');
+    if (searchParams.get('status') === 'success') {
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => setSubmitted(false), 8000);
+      
+      // Clean up the URL
+      const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash.split('?')[0];
+      window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+    } else if (searchParams.get('status') === 'error') {
+      const msg = searchParams.get('message') || 'Unknown error occurred.';
+      alert(lang === 'ar' ? `حدث خطأ: ${msg}` : `Error: ${msg}`);
+      
+      // Clean up the URL
+      const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash.split('?')[0];
+      window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+    }
+  }, [lang]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -80,7 +101,7 @@ const Contact: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Final validation sweep
@@ -92,47 +113,7 @@ const Contact: React.FC = () => {
 
     if (isNameValid && isEmailValid && isExpertiseValid && isMessageValid && isPhoneValid) {
       setIsSubmitting(true);
-      
-      try {
-        const response = await fetch('/contact.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-          },
-          body: new URLSearchParams(formData as Record<string, string>).toString()
-        });
-
-        let data;
-        const text = await response.text(); // Read as text first to handle cPanel injection
-        
-        try {
-          data = JSON.parse(text);
-        } catch (err) {
-          // If status is 200 but it's not JSON, assume success (cPanel often injects HTML into PHP responses)
-          if (response.ok) {
-            console.warn("Server returned success but response was not JSON:", text);
-            data = { success: true };
-          } else {
-            throw new Error(`Server returned a non-JSON response. Status: ${response.status}. Response: ${text.substring(0, 50)}...`);
-          }
-        }
-
-        if (response.ok) {
-          setSubmitted(true);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          setTimeout(() => setSubmitted(false), 8000);
-          setFormData({ name: '', email: '', phone: '', expertise: '', message: '' });
-        } else {
-          // Handle error (e.g. backend validation or email service error)
-          alert(lang === 'ar' ? `حدث خطأ: ${data.error}` : `Error: ${data.error}`);
-        }
-      } catch (error: any) {
-        console.error("Submission error:", error);
-        alert(lang === 'ar' ? `فشل في إرسال النموذج. التفاصيل: ${error.message}` : `Failed to submit form. Details: ${error.message}`);
-      } finally {
-        setIsSubmitting(false);
-      }
+      e.currentTarget.submit(); // Submit form traditionally to bypass WAF
     }
   };
 
@@ -192,7 +173,7 @@ const Contact: React.FC = () => {
                     <p className="text-slate-500">{t('contact.successMsg')}</p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                  <form action="/contact.php" method="POST" onSubmit={handleSubmit} className="space-y-6 relative z-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">{t('contact.name')}</label>

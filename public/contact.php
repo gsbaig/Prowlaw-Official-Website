@@ -8,32 +8,18 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); 
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
+// Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(["error" => "Method not allowed"]);
+    echo "Method not allowed";
     exit();
 }
 
-$inputJSON = file_get_contents('php://input');
-$input = json_decode($inputJSON, true);
-
-if (!$input) {
-    $input = $_POST;
-}
+$input = $_POST;
 
 if (empty($input)) {
     http_response_code(400);
-    echo json_encode(["error" => "Empty payload"]);
+    echo "Empty payload";
     exit();
 }
 
@@ -45,13 +31,13 @@ $message = isset($input['message']) ? htmlspecialchars(trim($input['message'])) 
 
 if (empty($name) || empty($email) || empty($message)) {
     http_response_code(400);
-    echo json_encode(["error" => "Missing required fields"]);
+    echo "Missing required fields";
     exit();
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
-    echo json_encode(["error" => "Invalid email address format"]);
+    echo "Invalid email address format";
     exit();
 }
 
@@ -60,7 +46,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 // ==========================================
 $smtpHost = 'mail.prolaw-jordan.com'; // Usually mail.yourdomain.com
 $smtpUser = 'info@prolaw-jordan.com'; // Your full email address
-$smtpPass = 'YOUR_EMAIL_PASSWORD_HERE'; // Replace with your actual email password
+$smtpPass = '-yc0U&9X5geEpj=^'; // Replace with your actual email password
 $smtpPort = 465; // Usually 465 for SSL, or 587 for TLS
 $toAdminEmail = 'info@prolaw-jordan.com';
 
@@ -131,11 +117,23 @@ try {
     $mail->Body    = $userBody;
     $mail->send();
     
-    http_response_code(200);
-    echo json_encode(["success" => true, "message" => "Emails sent successfully"]);
+    // Redirect back with success status
+    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
+    $referer = preg_replace('/([&?])status=[^&]*&?/', '$1', $referer);
+    $referer = preg_replace('/([&?])message=[^&]*&?/', '$1', $referer);
+    $referer = rtrim($referer, '?&');
+    $sep = (strpos($referer, '?') !== false) ? '&' : '?';
+    header("Location: " . $referer . $sep . "status=success");
+    exit();
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(["error" => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
+    // Redirect back with error status
+    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
+    $referer = preg_replace('/([&?])status=[^&]*&?/', '$1', $referer);
+    $referer = preg_replace('/([&?])message=[^&]*&?/', '$1', $referer);
+    $referer = rtrim($referer, '?&');
+    $sep = (strpos($referer, '?') !== false) ? '&' : '?';
+    header("Location: " . $referer . $sep . "status=error&message=" . urlencode($mail->ErrorInfo));
+    exit();
 }
 ?>
