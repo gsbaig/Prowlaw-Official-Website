@@ -8,10 +8,16 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
-// Only allow POST requests
+// If accessed via GET (e.g. following a redirect or direct navigation), forward to React frontend
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo "Method not allowed";
+    $status = isset($_GET['status']) ? $_GET['status'] : '';
+    $message = isset($_GET['message']) ? $_GET['message'] : '';
+    $qs = '';
+    if ($status) {
+        $qs = '?status=' . urlencode($status);
+        if ($message) $qs .= '&message=' . urlencode($message);
+    }
+    header("Location: /" . $qs . "#/contact");
     exit();
 }
 
@@ -117,23 +123,13 @@ try {
     $mail->Body    = $userBody;
     $mail->send();
     
-    // Redirect back with success status
-    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
-    $referer = preg_replace('/([&?])status=[^&]*&?/', '$1', $referer);
-    $referer = preg_replace('/([&?])message=[^&]*&?/', '$1', $referer);
-    $referer = rtrim($referer, '?&');
-    $sep = (strpos($referer, '?') !== false) ? '&' : '?';
-    header("Location: " . $referer . $sep . "status=success");
+    // Redirect back to React frontend with success status
+    header("Location: /?status=success#/contact");
     exit();
     
 } catch (Exception $e) {
-    // Redirect back with error status
-    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
-    $referer = preg_replace('/([&?])status=[^&]*&?/', '$1', $referer);
-    $referer = preg_replace('/([&?])message=[^&]*&?/', '$1', $referer);
-    $referer = rtrim($referer, '?&');
-    $sep = (strpos($referer, '?') !== false) ? '&' : '?';
-    header("Location: " . $referer . $sep . "status=error&message=" . urlencode($mail->ErrorInfo));
+    // Redirect back to React frontend with error status
+    header("Location: /?status=error&message=" . urlencode($mail->ErrorInfo) . "#/contact");
     exit();
 }
 ?>
